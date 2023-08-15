@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-var shell = require("shelljs");
 const videoService = require("./services/VideoService");
 const app = express();
 const port = 3000;
