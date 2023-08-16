@@ -31,12 +31,12 @@ app.post("/", async (req, res) => {
   try {
     const { yadbood_id, yadbood_title, image_path } = req.body;
     if (!yadbood_id || !yadbood_title || !image_path) {
-      return response(res, "2", 400);
+      return response(res, "", 400);
     }
     const result = videoService.create(yadbood_id, yadbood_title, image_path);
     return response(res, { _result: result });
   } catch {}
-  return response(res, "1", 400);
+  return response(res, "", 400);
 });
 
 function response(res, body = "", status = 200) {

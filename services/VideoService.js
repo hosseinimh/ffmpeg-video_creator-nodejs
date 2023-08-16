@@ -1,8 +1,8 @@
 var fs = require("fs");
 var https = require("https");
 var shell = require("shelljs");
-var sharp = require("sharp");
 var path = require("path");
+var sharp = require("sharp");
 
 class VideoService {
   async create(yadboodId, yadboodTitle, imagePath) {
@@ -55,13 +55,13 @@ class VideoService {
   }
 
   async getImage() {
-    return await this.pDownload(this.imagePath, this.videoImagePath);
+    return await this.download(this.imagePath, this.videoImagePath);
   }
 
   async getQrCode() {
     const qrCodePath = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&choe=UTF-8&chl=Https://iPorse.ir/qr/
         ${this.yadboodId}`;
-    return await this.pDownload(qrCodePath, this.videoQrCodePath);
+    return await this.download(qrCodePath, this.videoQrCodePath);
   }
 
   cropCircle() {
@@ -106,10 +106,10 @@ class VideoService {
     shell.exec(command);
   }
 
-  pDownload(url, dest) {
-    var file = fs.createWriteStream(dest);
+  download(url, dest) {
+    const file = fs.createWriteStream(dest);
     return new Promise((resolve, reject) => {
-      var responseSent = false;
+      let responseSent = false;
       https
         .get(url, (response) => {
           response.pipe(file);
