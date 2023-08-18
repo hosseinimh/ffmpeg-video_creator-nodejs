@@ -5,6 +5,7 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+app.use("/videos", express.static(__dirname + "/videos"));
 
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -27,16 +28,20 @@ app.get("/", (_, res) => {
   return res.send("index");
 });
 
-app.post("/", async (req, res) => {
+app.post("/create", async (req, res) => {
   try {
     const { yadbood_id, yadbood_title, image_path } = req.body;
     if (!yadbood_id || !yadbood_title || !image_path) {
-      return response(res, "", 400);
+      return response(res, { _result: "0", message: "bad parameters" }, 400);
     }
-    const result = videoService.create(yadbood_id, yadbood_title, image_path);
-    return response(res, { _result: result });
+    const result = await videoService.create(
+      yadbood_id,
+      yadbood_title,
+      image_path
+    );
+    return response(res, { _result: "1", video: result });
   } catch {}
-  return response(res, "", 400);
+  return response(res, { _result: "0", message: "error occured" }, 400);
 });
 
 function response(res, body = "", status = 200) {

@@ -8,11 +8,13 @@ class VideoService {
   async create(yadboodId, yadboodTitle, imagePath) {
     try {
       await this.init(yadboodId, yadboodTitle, imagePath);
-      this.render();
+      const result = this.render();
       this.onRendered();
+      return result;
     } catch (e) {
       console.log("error: " + e);
     }
+    return null;
   }
 
   async init(yadboodId, yadboodTitle, imagePath) {
@@ -100,6 +102,7 @@ class VideoService {
     this.shellExec(command);
     command = `ffmpeg -y -i ${this.tempVideoPath} -i ${this.videoCropImagePath} -filter_complex "[1][0]scale2ref=oh*mdar:ih*0.5[logo][video];[video][logo]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2;[1:v]format=rgba,geq=r=\'r(X,Y)\':a=\'1*alpha(X,Y)\',scale=205:205,zoompan=d=25*4:d=125:s=205x205,fade=in:st=2:d=2:alpha=1,fade=out:st=5:d=2:alpha=1[im];[0][im]overlay=(main_w-overlay_w)/2:(main_h-overlay_h)/2:enable='between(t,0,48)'" ${this.videoPath}`;
     this.shellExec(command);
+    return `${this.videoDirPath}/video.mp4`;
   }
 
   shellExec(command) {
